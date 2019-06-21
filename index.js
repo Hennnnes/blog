@@ -4,11 +4,14 @@ const rimraf = require("rimraf");
 
 const md = new MarkdownIt();
 const Template = require('./src/config/html_template');
+const IndexTemplate = require('./src/config/index_template');
 
 class MarkdownInterpreter {
 	constructor() {
 		this.src = './src/content/';
 		this.dist = './dist/';
+		
+		this.files = [];
 
 		this.resetDist();
 		this.init();
@@ -17,24 +20,27 @@ class MarkdownInterpreter {
 	async init() {
 		try {
 			let sourceFiles = await this.getFilesInFolder();
-			let files = []
-
+			
 			for (let i = 0; i < sourceFiles.length; i++) {
 				const fileContent = await this.getFileContent(sourceFiles[i]);
 				const html = this.convertFileContentToHTML(fileContent);
-				const modifiedDate = this.getFileModifiedDate(sourceFiles[i]);
+				const createdDate = this.getFileCreatedDate(sourceFiles[i]);
 				
-				files.push({
+				this.files.push({
 					name: sourceFiles[i].split('.')[0],
 					content: fileContent,
 					html: html,
-					date: modifiedDate
+					date: createdDate
 				});
 			}
+			
+			
+			this.files.forEach( (file) => {
+				this.createArticleFile( file );
+			});
+			
+			this.createIndexFile();
 
-			for (let i = 0; i < files.length; i++ ) {
-				await this.createHTMLFile( files[i] );
-			}
 		} catch (err) {
 			console.error(err);
 		}
@@ -80,25 +86,53 @@ class MarkdownInterpreter {
 		return md.render(content);
 	}
 
-	getFileModifiedDate(filename) {
-		const { mtime } = fs.statSync(`${this.src}${filename}`);
-		return mtime;
+	getFileCreatedDate(filename) {
+		const { ctime } = fs.statSync(`${this.src}${filename}`);
+		return ctime;
 	}
 
-	async createHTMLFile(file) {
-		return new Promise( (resolve, reject) => {
-			const content = Template
-				.replace('<!-- title -->', file.name.replace('_', ' '))
-				.replace('<!-- content -->', file.html);
+	createArticleFile(file) {
+		const content = Template
+			.replace('<!-- title -->', file.name.replace('_', ' '))
+			.replace('<!-- content -->', file.html);
 
-			fs.writeFile(`${this.dist}${file.name}.html`, content, (err) => {
-				if (err) {
-					return reject(err);
-				}
-				return resolve();
-			})
+		return this.saveHTMLFile(file.name, content);
+	}
 
+	saveHTMLFile(filename, content) {	
+		fs.writeFileSync(`${this.dist}${filename}.html`, content, (err) => {
+			if (err) {
+				return err;
+			}
+			console.log(`created File: ${this.dist}${filename}.html`)
+			return;
 		})
+	}
+
+	createIndexFile() {
+		let content = IndexTemplate;
+		const sortedFiles = this.files.sort((a, b) => {
+			return new Date(b.date) - new Date(a.date);
+		})
+
+		let items = [];
+
+		sortedFiles.forEach( (file) => {
+			let date = new Date(file.date)
+			date = date.toISOString();
+			date = date.slice(0,10)
+
+			items.push(`<li>
+				<a href="${file.name}.html">${file.name.replace('_', ' ')}</a>
+				<p>Erstellt: ${date}</p>
+			</li>`)
+		})
+
+		const htmlString = `<ul>${ items.join('') }</ul>`
+
+		content = content.replace('<!-- content -->', htmlString)
+		
+		this.saveHTMLFile('index', content);
 	}
 }
 
