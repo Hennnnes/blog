@@ -1,8 +1,9 @@
 let BasicTemplate = require('./html_template');
-const TITLE = 'Hennes Blog';
+const TITLE = 'Just another blog.';
 const intro = 'Hallo.'
 
 const Template = BasicTemplate
-	.replace('<!-- title -->', TITLE);
+	.replace('<!-- title -->', TITLE)
+	.replace('<!-- date -->', '');
 
 module.exports = Template;
