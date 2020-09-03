@@ -1,3 +1,3 @@
 # Hallo!
 
-[Hallo Welt](./articles/hello_world.md)
+[Kaffee, den ich gerne mag](./coffee.md)
