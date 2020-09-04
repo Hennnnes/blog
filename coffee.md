@@ -6,7 +6,7 @@ Damit ich nicht vergesse, welche ich gerne trinke, sammle ich diese hier.
 ## Kaffeehaus Lübeck
 ### Espresso
 - Espresso India Monsooned
-- Espresso Prime
+- Espresso Primo
 
 ### Filterkaffee
 - India Monsooned
