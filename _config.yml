@@ -1,2 +1,6 @@
 remote_theme: hennnnes/blog-theme
 title: Hennes’ Blog
+locale: DE
+
+twitter:
+  username: hennnnes
