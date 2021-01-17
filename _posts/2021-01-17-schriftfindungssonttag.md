@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Link - "Font: Kafka"
+title: Schriftfindungssonntag
 ---
 
 Es ist Sonntag, ich sitze am Esstisch, schaue durch das Fenster und suche im Internet nach schönen Schriften. Also alles wie immer.
