@@ -33,9 +33,9 @@ Stand: 4\. September 2020
 
 ## Verantwortlicher
 
-Hennes Römmer  
-Gravensteiner Weg 6  
-22049 Hamburg  
+Hennes Römmer
+Feldahornweg 18
+22303 Hamburg
 
 [hroemmer@googlemail.com](mailto:hroemmer@googlemail.com)
 
